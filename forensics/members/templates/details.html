@@ -1,0 +1,15 @@
+{% extends "master.html" %}
+
+{% block title %}
+  Details about {{ mymember.cr_firstname }} {{ mymember.cr_lastname }}
+{% endblock %}
+
+
+{% block content %}
+  <h1>{{ mymember.cr_firstname }} {{ mymember.cr_lastname }}</h1>
+  
+  <p>DNA: {{ mymember.cr_dna }}</p>
+  
+  <p>Back to <a href="/members">Criminals</a> list</p>
+  
+{% endblock %}

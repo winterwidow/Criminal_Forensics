@@ -1,0 +1,25 @@
+{% extends "master.html" %}
+
+{% block title %}
+
+  Forensics System - List of all criminals
+{% endblock %}
+
+
+{% block content %}
+
+  <p><a href="/">HOME</a></p>
+
+
+  <h1>Criminals</h1>
+  
+  <ul>
+    {% for x in mymembers %}
+      <li><a href="details/{{ x.id }}">{{ x.cr_firstname }} {{ x.cr_lastname }}</a></li>
+    {% endfor %}
+  </ul>
+  <form action="#" method="get">
+<input type="Submit" formaction="add" value="Add New Criminal" />
+</form>
+
+{% endblock %}
