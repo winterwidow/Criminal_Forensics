@@ -42,7 +42,7 @@ def main(request):
     template = loader.get_template('main.html')
     return HttpResponse(template.render())
 
-#new from here: 03/06/23
+'''#new from here: 03/06/23
 def add_criminal(request):
     if request.method=="GET":
         return render(request,'add_criminal.html')
@@ -68,3 +68,4 @@ def add_criminal(request):
             return render(request, 'main.html')
             #template=loader.get_template('main.html')
             #return HttpResponse(template.render(request))        
+'''
