@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> HOME</title>
+</head>
+
+<body><center>
+
+<h1> Add a new criminal</h1>
+
+<form action='#' method="post">
+{%csrf_token%}
+
+<h2> FName: </h2> <input type="text" name="crfirstname">
+<h3> LName: </h3> <input type="text" name="crlastname">
+<h4> Dna: </h4> <input type="text" name="crdna">
+<p>
+<input type="Submit" formaction="add?a=CSV" value="Add to CSV" />
+
+</p>
+</form>
+</center></body>
+</html>
