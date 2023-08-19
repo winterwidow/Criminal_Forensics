@@ -1,1 +1,3 @@
-patrick,bateman,aaaacccctttggg
+FirstName,LastName,Gender,Crime,Weapon,Date
+Patrick,Bateman,M,Robbery,,2023-08-06
+Doug,Judy,M,Car theft,,2023-07-20

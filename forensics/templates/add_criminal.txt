@@ -11,12 +11,18 @@
 <form action='#' method="post">
 {%csrf_token%}
 
-<h2> FName: </h2> <input type="text" name="crfirstname">
-<h3> LName: </h3> <input type="text" name="crlastname">
-<h4> Dna: </h4> <input type="text" name="crdna">
+<h2> FirstName: </h2> <input type="text" name="crfirstname">
+<h3> LastName: </h3> <input type="text" name="crlastname">
+<h4> Gender: </h4> <input type="text" name="crgender">
+<h5> Crime: </h5> <input type="text" name="crime">
+<h6> Weapon: </h6> <input type="text" name="weapon">
+<h7> Date: </h7> <input type="date" name="date" placeholder="YYYY-MM-DD">
+
+
+
 <p>
 <input type="Submit" formaction="add?a=CSV" value="Add to CSV" />
-
+<input type="Submit" formaction="add?a=DB" value="Add to DB" />
 </p>
 </form>
 </center></body>

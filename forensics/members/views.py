@@ -3,6 +3,7 @@ from django.template import loader
 from django.shortcuts import render
 import csv
 from members.models import Member
+#import mysql.connector
 
 
 #templates are text docs to connect html and django.
@@ -30,7 +31,7 @@ def members(request):
 
 #to display the details like dna  & fingerprints
 
-def details(request, id):
+'''def details(request, id):
 
     """ Contains all details of criminals """
     mymember = Member.objects.get(id=id)
@@ -42,7 +43,7 @@ def details(request, id):
     
     return HttpResponse(template.render(context, request))
     #return render(context, request)
-
+'''
 #main page
 
 def main(request):
@@ -52,7 +53,11 @@ def main(request):
 
 
 def add_criminal(request):
+
+    ''' Adds a criminal to database '''
+    
     if request.method == "GET":
+        
         return render(request,'add_criminal.txt')
         #template = loader.get_template('add_criminal.html')
         #return HttpResponse(template.render(request)) 
@@ -61,7 +66,11 @@ def add_criminal(request):
         
         cr_firstname=request.POST['crfirstname']
         cr_lastname=request.POST['crlastname']
-        cr_dna=request.POST['crdna']
+        cr_gender=request.POST['crgender']
+        cr_crime=request.POST['crime']
+        cr_weapon=request.POST['weapon']
+        cr_date=request.POST['date']
+        
 
         if request.GET['a'] =='CSV':                     #CSV FILES
             
@@ -72,22 +81,38 @@ def add_criminal(request):
                 print("i am here 1")
                 
                 wcs=csv.writer(csvfile)
-                wcs.writerow([cr_firstname,cr_lastname,cr_dna])
+
+                #wcs.writerow(['FirstName','LastName','Gender','Crime','Weapon','Date'])
+                #wcs.writerow([cr_firstname,cr_lastname,cr_dna])
+                wcs.writerow([cr_firstname,cr_lastname,cr_gender,cr_crime,cr_weapon,cr_date])
                 
             print("i am here 2")
             
             return render(request,'main.html')
             
-        else:
-           return render (request,'main.html')
+        #else:
+           #return render (request,'main.html')
         
-        '''else:                                           #DATABASE
+        
+        else:                                           #DATABASE
 
             s= Member()           #function in models.py
             s.cr_firstname=cr_firstname
             s.cr_lastname=cr_lastname
-            s.cr_dna=cr_dna
+            s.cr_gender=cr_gender
+            s.cr_crime=cr_crime
+            s.cr_weapon=cr_weapon
+            s.cr_date=cr_date
+            print("i am here")
             s.save()
             return render(request,'main.html')
-        '''
         
+        
+        
+def fetch_criminals(request):
+
+    s_list=Member.objects.all()
+    print(s_list)
+    return render(request,'criminal.txt', {'s_lst':s_list})
+    
+
