@@ -24,4 +24,5 @@ urlpatterns = [
     path('',views.main,name='main.forensics'),
     path('members/add', views.add_criminal),
     path('members/fetch', views.fetch_criminals),
+    #path('members/search', views.search_criminals),
 ]

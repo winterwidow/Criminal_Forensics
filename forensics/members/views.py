@@ -16,6 +16,7 @@ from .models import Member     #member is a database to store all members' info
 # Create your views here.
 
 def members(request):
+    
     """ Contains all criminals in the database  """
     
     mymembers = Member.objects.all().values()
@@ -28,29 +29,20 @@ def members(request):
     print("Member once complete")
     return HttpResponse(template.render(context,request))   #returns this to the webpage
     
+#-----------------------------------------------------------------------------------------------
 
-#to display the details like dna  & fingerprints
 
-'''def details(request, id):
-
-    """ Contains all details of criminals """
-    mymember = Member.objects.get(id=id)
-    template = loader.get_template('details.html')
-    
-    context = {
-        'mymember': mymember,
-    }
-    
-    return HttpResponse(template.render(context, request))
-    #return render(context, request)
-'''
 #main page
 
 def main(request):
+
+    '''Main Page'''
+    
     #return render(request,'main.html')
     template = loader.get_template('main.html')
     return HttpResponse(template.render())
 
+#-----------------------------------------------------------------------------------------------
 
 def add_criminal(request):
 
@@ -65,10 +57,15 @@ def add_criminal(request):
     elif request.method == 'POST':
         
         cr_firstname=request.POST['crfirstname']
+        
         cr_lastname=request.POST['crlastname']
+        
         cr_gender=request.POST['crgender']
+        
         cr_crime=request.POST['crime']
+        
         cr_weapon=request.POST['weapon']
+        
         cr_date=request.POST['date']
         
 
@@ -97,22 +94,33 @@ def add_criminal(request):
         else:                                           #DATABASE
 
             s= Member()           #function in models.py
+            
             s.cr_firstname=cr_firstname
             s.cr_lastname=cr_lastname
             s.cr_gender=cr_gender
             s.cr_crime=cr_crime
             s.cr_weapon=cr_weapon
             s.cr_date=cr_date
+            
             print("i am here")
+            
             s.save()
+            
             return render(request,'main.html')
         
+#-----------------------------------------------------------------------------------------------
         
         
 def fetch_criminals(request):
+
+    ''' To fetch all criminals and dsiplay their information '''
 
     s_list=Member.objects.all()
     print(s_list)
     return render(request,'criminal.txt', {'s_lst':s_list})
     
+#-----------------------------------------------------------------------------------------------
 
+'''def search_criminals(request):
+
+'''    
