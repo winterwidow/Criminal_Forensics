@@ -48,13 +48,13 @@ def add_criminal(request):
 
     ''' Adds a criminal to database '''
     
-    if request.method == "GET":
+    if request.method == "GET":   #input data
         
         return render(request,'add_criminal.txt')
         #template = loader.get_template('add_criminal.html')
         #return HttpResponse(template.render(request)) 
 
-    elif request.method == 'POST':
+    elif request.method == 'POST':   #save data to db/csv
         
         cr_firstname=request.POST['crfirstname']
         
@@ -123,6 +123,13 @@ def fetch_criminals(request):
     
 #-----------------------------------------------------------------------------------------------
 
-'''def search_criminals(request):
+def search_criminals(request):
+    if request.method == "GET":   #input the file
+        
+        return render(request,'fingerprint.txt')
 
-'''    
+    #elif request.method == 'POST':  #process file
+
+        
+
+    
