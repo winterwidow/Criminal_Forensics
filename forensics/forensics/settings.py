@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'members'
+    'members',
+    
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,12 @@ WSGI_APPLICATION = 'forensics.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASE_ROUTERS = (
+    
+ #   'members.dbrouters.MemberDBRouter',
+
+#        )
+
 DATABASES = {
     
     
@@ -86,7 +93,7 @@ DATABASES = {
         'PASSWORD': 'T@ylorsw1ft',
         'HOST': 'localhost',
         'PORT': '3306',
-    }
+    }   
         
    
 }

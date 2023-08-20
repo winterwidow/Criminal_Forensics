@@ -116,7 +116,9 @@ def fetch_criminals(request):
     ''' To fetch all criminals and dsiplay their information '''
 
     s_list=Member.objects.all()
+    
     print(s_list)
+    
     return render(request,'criminal.txt', {'s_lst':s_list})
     
 #-----------------------------------------------------------------------------------------------
