@@ -1,0 +1,14 @@
+{% extends "master.html" %}
+{% block content %}
+
+<p><a href="/">Back</a></p>
+
+{% if recognized_name %}
+    <h2> {{ recognized_name }}</h2>
+	<p>Image: {{ mymember.cr_image }}</p>
+    <img src="../../media/known_criminals/{{ recognized_name }}.jpg" alt="Image" height = "250" width = "250" >
+{% else %}
+    <h2>No face detected or not recognized.</h2>
+{% endif %}
+
+{% endblock %}
