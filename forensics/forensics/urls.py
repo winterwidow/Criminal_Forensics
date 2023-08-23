@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include,path
 from members import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('members.urls')),
@@ -25,4 +27,9 @@ urlpatterns = [
     path('members/add', views.add_criminal),
     path('members/fetch', views.fetch_criminals),
     path('members/search', views.search_criminals),
+    path('members/faceRecog', views.facial_recognition),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
