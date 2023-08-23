@@ -4,7 +4,7 @@
 <title> HOME</title>
 </head>
 
-<body> class= "container"> <center>
+<body> <class= "container"> <center>
 
 <h1> List of Criminals </h1>
 
@@ -22,6 +22,7 @@
 <td> Gender</td>
 <td> Crime </td>
 <td> Weapon </td>
+<td> Image </td>
 
 
 {%for s in s_lst %}
@@ -33,6 +34,7 @@
 <td>{{ s.cr_gender }}</td>
 <td>{{ s.cr_crime }}</td>
 <td>{{ s.cr_weapon }}</td>
+<td><img src="../../media/{{s.cr_image}}" alt="Image" height = "80" width = "80" ></td>
 
 </tr>
 
