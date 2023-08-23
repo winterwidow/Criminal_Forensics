@@ -4,6 +4,9 @@ from .models import Member  #imports member database
 
 # Register your models here.
 
-admin.site.register(Member) #registers to display on webpage
+class MemberAdmin(admin.ModelAdmin):
+  list_display = ("cr_firstname", "cr_lastname", "cr_image")
+
+admin.site.register(Member, MemberAdmin) #registers to display on webpage
 
 #admin.site.register(DNA)
