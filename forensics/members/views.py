@@ -5,6 +5,10 @@ import csv
 from members.models import Member
 #import mysql.connector
 
+from .FRforms import ImageUploadForm
+from django.conf import settings
+import face_recognition
+import os
 
 #templates are text docs to connect html and django.
 #written in html
@@ -129,6 +133,56 @@ def search_criminals(request):
         return render(request,'fingerprint.txt')
 
     #elif request.method == 'POST':  #process file
+
+#-----------------------------------------------------------------------------------------------    
+
+def load_known_faces(known_faces_dir):
+    known_faces = {}
+    for filename in os.listdir(known_faces_dir):       
+        name = os.path.splitext(filename)[0]        
+        image = face_recognition.load_image_file(os.path.join(known_faces_dir, filename))       
+        face_encoding = face_recognition.face_encodings(image)[0]
+        if len(face_encoding)>0:
+            known_faces[name] = face_encoding
+    return known_faces
+
+def recognize_faces_in_image(image_path, known_faces):
+    user_image = face_recognition.load_image_file(image_path)
+    face_locations = face_recognition.face_locations(user_image)    
+    face_encodings = face_recognition.face_encodings(user_image, face_locations)
+
+    if len(face_encodings)>0:
+        for face_encoding in face_encodings:
+            matches = face_recognition.compare_faces(list(known_faces.values()), face_encoding)
+            name = "Criminal not found in our database"
+
+            face_distances = face_recognition.face_distance(list(known_faces.values()), face_encoding)
+            best_match_index = int(face_distances.argmin())
+            if matches[best_match_index]:
+                name = list(known_faces.keys())[best_match_index]
+            print(f"Name: {name}")
+        return name
+    else:
+        return("Face not detected in uploaded image")
+
+def facial_recognition(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_image = request.FILES['image']            
+            known_faces_dir = settings.MEDIA_ROOT/'known_criminals/'
+            known_faces = load_known_faces(known_faces_dir)
+            match = recognize_faces_in_image(user_image, known_faces)            
+            
+            return render(request, 'faceRecog_result.html', {
+                   'recognized_name': match,
+                   } )                   
+        
+    else:
+        form = ImageUploadForm()
+    
+    return render(request,'facial_recognition.html',{'form': form}) 
+
 
         
 
