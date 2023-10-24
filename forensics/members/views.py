@@ -128,6 +128,9 @@ def fetch_criminals(request):
 #-----------------------------------------------------------------------------------------------
 
 def search_criminals(request):
+
+    ''' TO search by fingerprint'''
+    
     if request.method == "GET":   #input the file
         
         return render(request,'fingerprint.txt')
