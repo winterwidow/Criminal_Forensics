@@ -136,52 +136,105 @@ def search_criminals(request):
 
 #-----------------------------------------------------------------------------------------------    
 
+# Loads the images of known faces from directory , extracts the facial encodings and stores in a dictionary  
+    
 def load_known_faces(known_faces_dir):
-    known_faces = {}
+    known_faces = {}  
+    
     for filename in os.listdir(known_faces_dir):       
         name = os.path.splitext(filename)[0]        
-        image = face_recognition.load_image_file(os.path.join(known_faces_dir, filename))       
-        face_encoding = face_recognition.face_encodings(image)[0]
+
+        # Returns 'image', a numpy array with image file contents
+        image = face_recognition.load_image_file(os.path.join(known_faces_dir, filename))
+
+        # Get the face encodings
+        face_encoding = face_recognition.face_encodings(image)[0]        
+        
+        # Dictionary 'known_faces' has filename as key and facial encodings as value   
         if len(face_encoding)>0:
             known_faces[name] = face_encoding
     return known_faces
 
-def recognize_faces_in_image(image_path, known_faces):
-    user_image = face_recognition.load_image_file(image_path)
-    face_locations = face_recognition.face_locations(user_image)    
-    face_encodings = face_recognition.face_encodings(user_image, face_locations)
+def recognize_faces_in_image(user_image_name, known_faces):
 
-    if len(face_encodings)>0:
-        for face_encoding in face_encodings:
+    # Returns 'user_image', a numpy array with image file contents
+    user_image = face_recognition.load_image_file(user_image_name)    
+
+    # Returns 'user_face_locations', a list of tuples of found face locations in (top, right, bottom, left) order    
+    user_face_locations = face_recognition.face_locations(user_image)   
+
+    # Returns 'face_encodings', a list of 128-dimensional face encodings (one for each face in the image)
+    user_face_encodings = face_recognition.face_encodings(user_image, user_face_locations)
+    
+    if len(user_face_encodings)>0: # Check if face is present in image
+
+        for face_encoding in user_face_encodings:
+            
+            # Compare the known list of face encodings against user image encoding to see if they match
+            # Returns 'matches', a list of True/False values indicating which known_face_encodings match
+            # the user image face encoding. 
             matches = face_recognition.compare_faces(list(known_faces.values()), face_encoding)
-            name = "Criminal not found in our database"
+            
 
+            # Compare user face encoding with every known face encoding and get a euclidean distance for
+            # each comparison. The distance shows how similar the faces are.
+            # Returns 'face_distances', a numpy ndarray.         
             face_distances = face_recognition.face_distance(list(known_faces.values()), face_encoding)
-            best_match_index = int(face_distances.argmin())
-            if matches[best_match_index]:
-                name = list(known_faces.keys())[best_match_index]
-            print(f"Name: {name}")
+            
+            best_match_index = int(face_distances.argmin()) # Returns the index of the minimum value           
+            
+            if matches[best_match_index]: 
+                name = list(known_faces.keys())[best_match_index] # From the index get the name of the known face
+            else:
+                name = "1" # For criminal not found
+            
         return name
     else:
-        return("Face not detected in uploaded image")
+        return("0") # For face not detected in uploaded image
 
 def facial_recognition(request):
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            user_image = request.FILES['image']            
-            known_faces_dir = settings.MEDIA_ROOT/'known_criminals/'
-            known_faces = load_known_faces(known_faces_dir)
-            match = recognize_faces_in_image(user_image, known_faces)            
-            
-            return render(request, 'faceRecog_result.html', {
-                   'recognized_name': match,
-                   } )                   
-        
-    else:
-        form = ImageUploadForm()
     
-    return render(request,'facial_recognition.html',{'form': form}) 
+    if request.method == 'POST': 
+        
+        # create a form instance and populate it with data from the request:
+        myForm = ImageUploadForm(request.POST, request.FILES)
+
+        
+        if myForm.is_valid(): #Process the data and redirect to result page
+            
+            imageName = request.FILES['usr_image']  # User uploaded image name          
+            known_faces_dir = settings.MEDIA_ROOT/'known_criminals/' # Directory where images are stored
+            
+            # Returns 'known_faces', a dictionary with filename as key and facial encodings as value
+            known_faces = load_known_faces(known_faces_dir)
+
+            # Compares facial encodings of user uploaded image with known facial encodings dictionary
+            match = recognize_faces_in_image(imageName, known_faces)          
+
+            error=""
+            mymember=""
+            
+            if (match=="1"):
+                error = "Criminal not found in our database"
+            elif(match=="0"):
+                error = "Face not detected in uploaded image"
+            else:    
+                img = 'known_criminals/'+ match +'.jpg' # Construct image path as stored in db                          
+                mymember = Member.objects.get(cr_image=img) # Use image path to get details
+                print(mymember.cr_firstname)               
+
+            return render(request,'criminal_details.html',{'mymember': mymember,'error': error})
+            
+        
+    else: # If GET request create an empty form. Called first time we visit the url.
+        myForm = ImageUploadForm()
+
+    # Returns the form to the template html file to render.
+    # An empty form is rendered if coming here from GET    
+    # A populated form with previously entered data is rendered
+    # if coming here from is_valid()=False    
+
+    return render(request,'facial_recognition.html',{'form': myForm}) 
 
 
         
