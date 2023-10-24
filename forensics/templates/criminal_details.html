@@ -1,0 +1,27 @@
+<!-- Display details of a criminal as search result -->
+{% extends "master.html" %}
+
+
+{% block content %}
+  <p><a href="/">HOME</a></p>
+
+  {% if error %}
+  		 <h2>{{error}}</h2> <!-- Show error message if any -->
+  {% else %}
+
+  <h1>{{ mymember.cr_firstname }} {{ mymember.cr_lastname }}</h1>
+
+  {% if mymember.cr_image %} <!-- Image field is optional -->
+  <p><img src="../../media/{{mymember.cr_image}}" height = "250" width = "250" ></p>
+  {% endif%}
+
+  <p><b>Gender:</b> {{ mymember.cr_gender }}</p>
+  <p><b>Crime:</b> {{ mymember.cr_crime }}</p>
+  <p><b>Weapon:</b> {{ mymember.cr_weapon }}</p>
+
+  {% endif%}
+
+  <p><a href="/members/faceRecog">Back</a> </p>
+
+
+{% endblock %}
