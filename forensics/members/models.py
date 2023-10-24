@@ -11,4 +11,4 @@ class Member(models.Model):
     cr_weapon = models.CharField(null=True,max_length=255,db_index=True)
     cr_date = models.DateField(null=True,db_index=True)
     cr_image = models.ImageField(upload_to='known_criminals/', blank=True,null=True,)
-    cr_fprint = models.BinaryField(blank=True,null=True)
+    cr_fprint = models.BinaryField(upload_to='user_files/',blank=True,null=True)
