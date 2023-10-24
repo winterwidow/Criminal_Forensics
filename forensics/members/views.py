@@ -335,7 +335,10 @@ def upload_file(request):
         s.cr_fprint=fingerprint_data
         s.save()
 
-    return render(request,"upload_file.html")
+    return render(request,"fingerprint.html")
+
+def matchfingerprint(request):
+    
     
 
 
