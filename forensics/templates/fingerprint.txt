@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title> HOME</title>
+    <title>File Upload</title>
 </head>
+<body><centre>
+    <h1> Search by fingerprint </h1>
+    <h2>Upload a File</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-<body><center>
-
-<h1> Search by fingerprint </h1>
-
-<form action='#' method="post">
-{%csrf_token%}
-
-<p>
-<label> upload file </label>
-<input type = "file" id = "inputFile" name="fingerprint_data" > 
-</p>
+    <label for="fingerprint_data">Fingerprint Data:</label>
+    <input type = "file" id = "inputFile" name="fingerprint_data" >
 
 </form>
-</center></body>
+</body>
+</centre>
 </html>
