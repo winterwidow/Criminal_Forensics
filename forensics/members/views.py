@@ -127,9 +127,9 @@ def fetch_criminals(request):
     
 #-----------------------------------------------------------------------------------------------
 
-def search_criminals(request):
+'''def search_criminals(request):
 
-    ''' TO search by fingerprint'''
+    
     
     if request.method == "GET":   #input the file
         
@@ -137,7 +137,7 @@ def search_criminals(request):
 
     def search_criminals(request):
 
-    ''' Search By fingerprint '''
+    
     
     if request.method == "GET":   #input the file
         
@@ -216,7 +216,7 @@ def search_criminals(request):
     cv2.waitKey(0)
 
     #return render(request, 'fingerprint-result.html')
-
+'''
 #-----------------------------------------------------------------------------------------------    
 
 # Loads the images of known faces from directory , extracts the facial encodings and stores in a dictionary  
@@ -319,7 +319,21 @@ def facial_recognition(request):
 
     return render(request,'facial_recognition.html',{'form': myForm}) 
 
+#-----------------------------------------------------------------------------------------------
 
+#for fingerprint:
+
+def upload_file(request):
+    
+    if request.method == 'POST':
         
+        fingerprint_data = request.POST.get('fingerprint_data')
+        file = request.FILES['file_upload']
+        
+        s = Member()
+
+        s.cr_fprint=fingerprint_data
+        s.save()
+
 
     
