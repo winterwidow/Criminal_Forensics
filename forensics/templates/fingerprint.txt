@@ -13,7 +13,7 @@
 
 <p>
 <label> upload file </label>
-<input type = "file" id = "inputFile" name="crfprint" > 
+<input type = "file" id = "inputFile" name="fingerprint_data" > 
 </p>
 
 </form>
