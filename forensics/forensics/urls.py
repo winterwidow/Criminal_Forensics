@@ -26,8 +26,9 @@ urlpatterns = [
     path('',views.main,name='main.forensics'),
     path('members/add', views.add_criminal),
     path('members/fetch', views.fetch_criminals),
-    path('members/search', views.matchfingerprint),
+    path('members/fprint', views.fingerprint_match),
     path('members/faceRecog', views.facial_recognition),
+    
 ]
 
 if settings.DEBUG:
