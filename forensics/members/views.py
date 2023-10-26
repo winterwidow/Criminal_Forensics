@@ -73,7 +73,7 @@ def add_criminal(request):
         cr_date=request.POST['date']
         
 
-        if request.GET['a'] =='CSV':                     #CSV FILES
+       ''' if request.GET['a'] =='CSV':                     #CSV FILES
             
             print("i am here")
             
@@ -94,8 +94,8 @@ def add_criminal(request):
         #else:
            #return render (request,'main.html')
         
-        
-        else:                                           #DATABASE
+       ''' 
+        if request.GET['a'] =='DB':                                           #DATABASE
 
             s= Member()           #function in models.py
             
