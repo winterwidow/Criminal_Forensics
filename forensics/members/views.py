@@ -1,21 +1,20 @@
 from django.http import HttpResponse   #to get a response or goto the webpage
 from django.template import loader
 from django.shortcuts import render
-import csv
+#import csv
 from members.models import Member
+from django.http import JsonResponse
 #import mysql.connector
-
 from .FRforms import ImageUploadForm
 from django.conf import settings
 import face_recognition
+import cv2
 import os
+from .models import Member     #member is a database to store all members' info
 
 #templates are text docs to connect html and django.
 #written in html
 #Template loaders are responsible for locating templates, loading them, and returning Template objects.
-
-from .models import Member     #member is a database to store all members' info
-
 
 # Create your views here.
 
@@ -34,7 +33,6 @@ def members(request):
     return HttpResponse(template.render(context,request))   #returns this to the webpage
     
 #-----------------------------------------------------------------------------------------------
-
 
 #main page
 
@@ -127,97 +125,7 @@ def fetch_criminals(request):
     
 #-----------------------------------------------------------------------------------------------
 
-'''def search_criminals(request):
-
-    
-    
-    if request.method == "GET":   #input the file
-        
-        return render(request,'fingerprint.txt')
-
-    def search_criminals(request):
-
-    
-    
-    if request.method == "GET":   #input the file
-        
-        return render(request,'fingerprint.txt')
-
-    elif request.method == 'POST':  #process file
-
-        sample=cv2.imread("  ")
-
-    #sample=cv2.resize(sample, None, fx=2.5,fy=2.5)
-    #cv2.imshow("sample",sample)
-    #cv2.waitKey(0)
-
-
-    best_score=0
-    image=filename=None
-    kp1,kp2,mp=None,None,None
-
-    l=[file for file in os.listdir("SOCOFing/Real")]
-
-    counter=0
-    
-    for file in l[:1000]:
-        
-        if counter%50==0:
-            
-            print(counter)
-            
-        counter+=1
-        fingerprint_image=cv2.imread("SOCOFing/Real/"+file)
-        sift=cv2.SIFT_create()
-
-        keypoints1, descriptors1=sift.detectAndCompute(sample,None)
-        keypoints2, descriptors2=sift.detectAndCompute(fingerprint_image,None)
-
-        matches=cv2.FlannBasedMatcher({'algorithm':1,'trees':10},{}).knnMatch(descriptors1,descriptors2,k=2)
-
-
-        match_points=[]
-
-        for p,q in matches:
-            
-            if p.distance<0.1*q.distance:
-                
-                match_points.append(p)
-
-
-        keypoints=0
-
-        if len(keypoints1)<len(keypoints2):
-            
-            keypoints=len(keypoints1)
-            
-        else:
-            
-            keypoints=len(keypoints2)
-
-
-        if len(match_points)/keypoints * 100 >best_score:
-            
-            best_score=len(match_points)/keypoints * 100
-
-            filename=file
-            image=fingerprint_image
-            kp1=keypoints1
-            kp2=keypoints2
-            mp=match_points
-
-
-    #print("best match:"+filename)
-    #print("score:"+str(round(best_score,3)))
-
-    result=cv2.drawMatches(sample, kp1, image,kp2,mp,None)
-    result=cv2.resize(result,None, fx=4,fy=4)
-    #cv2.imshow("Result",result)
-    cv2.waitKey(0)
-
-    #return render(request, 'fingerprint-result.html')
-'''
-#-----------------------------------------------------------------------------------------------    
+  # FACIAL RECOGNITION
 
 # Loads the images of known faces from directory , extracts the facial encodings and stores in a dictionary  
     
@@ -321,7 +229,7 @@ def facial_recognition(request):
 
 #-----------------------------------------------------------------------------------------------
 
-#for fingerprint:
+# FINGERPRINT MATCHING
 
 '''def upload_file(request):
     
@@ -336,10 +244,12 @@ def facial_recognition(request):
         s.save()
 
     return render(request,"fingerprint.html")
-'''
+    '''
 
 def fingerprint_match(request):
+    
     if request.method == 'POST':
+        
         uploaded_fingerprint_data = request.POST.get('fingerprint_data')
 
         best_score = 0
@@ -357,13 +267,19 @@ def fingerprint_match(request):
         l = [file for file in os.listdir("SOCOFing/Real")][:1000]
         
         for file in l:
+            
             fingerprint_image = cv2.imread(os.path.join("SOCOFing/Real", file))
             keypoints1, descriptors1 = sift.detectAndCompute(sample, None)
             keypoints2, descriptors2 = sift.detectAndCompute(fingerprint_image, None)
             
             matches = cv2.FlannBasedMatcher({'algorithm': 1, 'trees': 10}, {}).knnMatch(descriptors1, descriptors2, k=2)
             match_points = [p for p, q in matches if p.distance < 0.1 * q.distance]
-            
+
+            #The FLANN algorithm is used to efficiently find the nearest neighbors in a high-dimensional space, 
+            #which is particularly useful for feature matching in computer vision tasks.
+            #The result of flann.knnMatch is a list of matched feature points, 
+            #which you process in the loop to filter out the good matches based on the distance ratio test 
+
             keypoints = min(len(keypoints1), len(keypoints2))
             
             match_score = len(match_points) / keypoints * 100
@@ -379,7 +295,7 @@ def fingerprint_match(request):
         
         return JsonResponse(result)
 
-    return render(request, 'fingerprint_app/fingerprint_match.html')
+    return render(request, 'fingerprint_match.html')
 
 
     
