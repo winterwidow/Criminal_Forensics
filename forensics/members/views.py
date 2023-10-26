@@ -94,7 +94,7 @@ def add_criminal(request):
         #else:
            #return render (request,'main.html')
         
-       ''' 
+        ''' 
         if request.GET['a'] =='DB':                                           #DATABASE
 
             s= Member()           #function in models.py
