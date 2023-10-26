@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fingerprint Matching</title>
+</head>
+<body>
+    <h1>Fingerprint Matching</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        <label for="fingerprint_data">Enter Fingerprint Data:</label>
+        <textarea name="fingerprint_data" rows="4" cols="50"></textarea>
+        <br>
+        <button type="submit">Match Fingerprint</button>
+    </form>
+    
+    <div id="result">
+        {% if best_filename %}
+            <p>Best match: {{ best_filename }}</p>
+            <p>Score: {{ score }}</p>
+            <img src="{% static 'SOCOFing/Real/' %}{% with best_filename as filename %}{% endwith %}">
+        {% endif %}
+    </div>
+</body>
+</html>
