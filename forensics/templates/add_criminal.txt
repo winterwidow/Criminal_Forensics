@@ -26,7 +26,7 @@
 
 <p>
 
-<input type="Submit" formaction="add?a=CSV" value="Add to CSV" />
+<!--<input type="Submit" formaction="add?a=CSV" value="Add to CSV" />-->
 
 <input type="Submit" formaction="add?a=DB" value="Add to DB" />
 
