@@ -323,7 +323,7 @@ def facial_recognition(request):
 
 #for fingerprint:
 
-def upload_file(request):
+'''def upload_file(request):
     
     if request.method == 'POST':
         
@@ -336,10 +336,50 @@ def upload_file(request):
         s.save()
 
     return render(request,"fingerprint.html")
+'''
 
-def matchfingerprint(request):
-    
-    
+def fingerprint_match(request):
+    if request.method == 'POST':
+        uploaded_fingerprint_data = request.POST.get('fingerprint_data')
+
+        best_score = 0
+        best_filename = None
+        sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
+        sift = cv2.SIFT_create()  
+
+        #reates a SIFT (Scale-Invariant Feature Transform) object using OpenCV. 
+        #SIFT is a feature detection and description algorithm commonly used in computer vision tasks, 
+        #including image matching and object recognition.
+
+        #This object allows you to perform various operations related to SIFT feature extraction, 
+        #such as detecting key points and computing descriptors for those key points in an image.
+
+        l = [file for file in os.listdir("SOCOFing/Real")][:1000]
+        
+        for file in l:
+            fingerprint_image = cv2.imread(os.path.join("SOCOFing/Real", file))
+            keypoints1, descriptors1 = sift.detectAndCompute(sample, None)
+            keypoints2, descriptors2 = sift.detectAndCompute(fingerprint_image, None)
+            
+            matches = cv2.FlannBasedMatcher({'algorithm': 1, 'trees': 10}, {}).knnMatch(descriptors1, descriptors2, k=2)
+            match_points = [p for p, q in matches if p.distance < 0.1 * q.distance]
+            
+            keypoints = min(len(keypoints1), len(keypoints2))
+            
+            match_score = len(match_points) / keypoints * 100
+            
+            if match_score > best_score:
+                best_score = match_score
+                best_filename = file
+
+        result = {
+            'best_filename': best_filename,
+            'score': round(best_score, 3)
+        }
+        
+        return JsonResponse(result)
+
+    return render(request, 'fingerprint_app/fingerprint_match.html')
 
 
     
