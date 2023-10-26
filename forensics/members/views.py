@@ -59,17 +59,11 @@ def add_criminal(request):
     elif request.method == 'POST':   #save data to db/csv
         
         cr_firstname=request.POST['crfirstname']
-        
         cr_lastname=request.POST['crlastname']
-        
         cr_gender=request.POST['crgender']
-        
         cr_crime=request.POST['crime']
-        
         cr_weapon=request.POST['weapon']
-        
         cr_date=request.POST['date']
-        
 
        ''' if request.GET['a'] =='CSV':                     #CSV FILES
             
@@ -96,7 +90,8 @@ def add_criminal(request):
         if request.GET['a'] =='DB':                                           #DATABASE
 
             s= Member()           #function in models.py
-            
+        
+            #to store details
             s.cr_firstname=cr_firstname
             s.cr_lastname=cr_lastname
             s.cr_gender=cr_gender
@@ -250,7 +245,7 @@ def fingerprint_match(request):
     
     if request.method == 'POST':
         
-        uploaded_fingerprint_data = request.POST.get('fingerprint_data')
+        uploaded_fingerprint_data = request.POST.get('fingerprint_data')  #input fingerprint file
 
         best_score = 0
         best_filename = None
