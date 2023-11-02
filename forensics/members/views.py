@@ -10,6 +10,7 @@ from django.conf import settings
 import face_recognition
 import cv2
 import os
+import numpy as np
 from .models import Member     #member is a database to store all members' info
 
 #templates are text docs to connect html and django.
@@ -241,42 +242,43 @@ def facial_recognition(request):
     return render(request,"fingerprint.html")
     '''
 
+def is_fingerprint_image(image_path):
+    
+    fingerprint_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Convert the image to grayscale
+    
+    if fingerprint_image is None:
+        return False
+        
+    edges = cv2.Canny(fingerprint_image, 100, 200)  # Apply Canny edge detection
+    # Check if a reasonable number of edges are present in the image
+    return np.sum(edges) > 100
+
 def fingerprint_match(request):
     
     if request.method == 'POST':
         
-        uploaded_fingerprint_data = request.POST.get('fingerprint_data')  #input fingerprint file
+        uploaded_fingerprint_data = request.FILES['fingerprint_data']  # Input fingerprint file
 
+        if not is_fingerprint_image(uploaded_fingerprint_data):
+            return JsonResponse({'error': 'Uploaded file is not a valid fingerprint image'})
+        
         best_score = 0
         best_filename = None
-        sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
-        sift = cv2.SIFT_create()  
-
-        #reates a SIFT (Scale-Invariant Feature Transform) object using OpenCV. 
-        #SIFT is a feature detection and description algorithm commonly used in computer vision tasks, 
-        #including image matching and object recognition.
-
-        #This object allows you to perform various operations related to SIFT feature extraction, 
-        #such as detecting key points and computing descriptors for those key points in an image.
+        #sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
+        sample=uploaded_fingerprint_data
+        sift = cv2.SIFT_create()
 
         l = [file for file in os.listdir("SOCOFing/Real")][:1000]
         
         for file in l:
-            
             fingerprint_image = cv2.imread(os.path.join("SOCOFing/Real", file))
             keypoints1, descriptors1 = sift.detectAndCompute(sample, None)
             keypoints2, descriptors2 = sift.detectAndCompute(fingerprint_image, None)
             
             matches = cv2.FlannBasedMatcher({'algorithm': 1, 'trees': 10}, {}).knnMatch(descriptors1, descriptors2, k=2)
             match_points = [p for p, q in matches if p.distance < 0.1 * q.distance]
-
-            #The FLANN algorithm is used to efficiently find the nearest neighbors in a high-dimensional space, 
-            #which is particularly useful for feature matching in computer vision tasks.
-            #The result of flann.knnMatch is a list of matched feature points, 
-            #which you process in the loop to filter out the good matches based on the distance ratio test 
-
-            keypoints = min(len(keypoints1), len(keypoints2))
             
+            keypoints = min(len(keypoints1), len(keypoints2))
             match_score = len(match_points) / keypoints * 100
             
             if match_score > best_score:
@@ -291,6 +293,5 @@ def fingerprint_match(request):
         return JsonResponse(result)
 
     return render(request, 'fingerprint_match.html')
-
 
     
