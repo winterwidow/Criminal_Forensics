@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,12 +10,15 @@
     
     <h1>Fingerprint Matching</h1>
     
-    <form method="post" action="{% url 'fingerprint_match' %}">
+  
+	<form method="post" enctype="multipart/form-data">
         
         {% csrf_token %}
         
-        <label for="fingerprint_data">Enter Fingerprint Data:</label>
-        <textarea name="fingerprint_data" rows="4" cols="50"></textarea>
+       <!-- <label for="fingerprint_data">Enter Fingerprint Data:</label> -->
+	
+	  <p style="text-align : left;">> Enter FIngerprint Data </p>
+   	  <input type="file" name="fingerprint_data"> 
         
         <br>
         
