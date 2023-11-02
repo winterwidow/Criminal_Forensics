@@ -3,7 +3,7 @@ from django.template import loader
 from django.shortcuts import render
 #import csv
 from members.models import Member
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 #import mysql.connector
 from .FRforms import ImageUploadForm
 from django.conf import settings
@@ -242,45 +242,42 @@ def facial_recognition(request):
     return render(request,"fingerprint.html")
     '''
 
-def is_fingerprint_image(image_path):
-    
-    fingerprint_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)  # Convert the image to grayscale
-    
+def is_fingerprint_image(image_data):
+    fingerprint_image = cv2.imdecode(np.fromstring(image_data.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
     if fingerprint_image is None:
         return False
-        
-    edges = cv2.Canny(fingerprint_image, 100, 200)  # Apply Canny edge detection
-    # Check if a reasonable number of edges are present in the image
+    edges = cv2.Canny(fingerprint_image, 100, 200)
     return np.sum(edges) > 100
 
 def fingerprint_match(request):
-    
     if request.method == 'POST':
-        
-        uploaded_fingerprint_data = request.FILES['fingerprint_data']  # Input fingerprint file
+        uploaded_fingerprint_data = request.FILES.get('fingerprint_data')
+
+        if not uploaded_fingerprint_data:
+            error_message = "Please upload a valid fingerprint data file."
+            return render(request, 'upload_form.html', {'error_message': error_message})
 
         if not is_fingerprint_image(uploaded_fingerprint_data):
-            return JsonResponse({'error': 'Uploaded file is not a valid fingerprint image'})
-        
+            error_message = "The uploaded file is not a valid fingerprint image."
+            return render(request, 'upload_form.html', {'error_message': error_message})
+
         best_score = 0
         best_filename = None
-        #sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
-        sample=uploaded_fingerprint_data
+        sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
         sift = cv2.SIFT_create()
-
         l = [file for file in os.listdir("SOCOFing/Real")][:1000]
-        
+
         for file in l:
             fingerprint_image = cv2.imread(os.path.join("SOCOFing/Real", file))
             keypoints1, descriptors1 = sift.detectAndCompute(sample, None)
             keypoints2, descriptors2 = sift.detectAndCompute(fingerprint_image, None)
-            
+
             matches = cv2.FlannBasedMatcher({'algorithm': 1, 'trees': 10}, {}).knnMatch(descriptors1, descriptors2, k=2)
             match_points = [p for p, q in matches if p.distance < 0.1 * q.distance]
-            
+
             keypoints = min(len(keypoints1), len(keypoints2))
             match_score = len(match_points) / keypoints * 100
-            
+
             if match_score > best_score:
                 best_score = match_score
                 best_filename = file
@@ -289,8 +286,9 @@ def fingerprint_match(request):
             'best_filename': best_filename,
             'score': round(best_score, 3)
         }
-        
+
         return JsonResponse(result)
+
 
     return render(request, 'fingerprint_match.html')
 
