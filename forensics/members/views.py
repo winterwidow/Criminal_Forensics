@@ -245,13 +245,17 @@ def facial_recognition(request):
     '''
 
 def is_fingerprint_image(image_data):
+    
     fingerprint_image = cv2.imdecode(np.fromstring(image_data.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+    
     if fingerprint_image is None:
         return False
+        
     edges = cv2.Canny(fingerprint_image, 100, 200)
     return np.sum(edges) > 100
 
 def fingerprint_match(request):
+    
     if request.method == 'POST':
         uploaded_fingerprint_data = request.FILES.get('fingerprint_data')
 
@@ -265,11 +269,13 @@ def fingerprint_match(request):
 
         best_score = 0
         best_filename = None
-        sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
+        #sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
+        sample=uploaded_fingerprint_data
         sift = cv2.SIFT_create()
         l = [file for file in os.listdir("SOCOFing/Real")][:1000]
 
         for file in l:
+            
             fingerprint_image = cv2.imread(os.path.join("SOCOFing/Real", file))
             keypoints1, descriptors1 = sift.detectAndCompute(sample, None)
             keypoints2, descriptors2 = sift.detectAndCompute(fingerprint_image, None)
@@ -290,7 +296,6 @@ def fingerprint_match(request):
         }
 
         return JsonResponse(result)
-
 
     return render(request, 'fingerprint_match.html')
 
