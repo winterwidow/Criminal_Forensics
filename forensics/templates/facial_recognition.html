@@ -5,13 +5,14 @@
 
 <p><a href="/members">Back</a></p>
 
-<h1>Search by Face</h1>
-<p>Upload the image:</p>
+<h1>Facial Recognition</h1>
+<p>Upload the image to search:</p>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}  <!-- Required by Django to protect against Cross Site Request Forgery -->
     {{ form.as_p }}   <!-- Form fields and their attributes filled by Django from the 'form' object. as_p used to render as paragraph for better display-->
-    <button type="submit">Upload</button>
+    <br>
+    <button type="submit">Search</button>
 </form>
 
 </body>
