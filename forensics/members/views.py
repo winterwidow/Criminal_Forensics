@@ -3,7 +3,7 @@ from django.template import loader
 from django.shortcuts import render
 #import csv
 from members.models import Member
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 #import mysql.connector
 from .FRforms import ImageUploadForm
 from django.conf import settings
@@ -66,7 +66,26 @@ def add_criminal(request):
         cr_weapon=request.POST['weapon']
         cr_date=request.POST['date']
 
-       ''' if request.GET['a'] =='CSV':                     #CSV FILES
+       
+        if request.GET['a'] =='DB':                                           #DATABASE
+
+            s= Member()           #function in models.py
+        
+            #to store details
+            s.cr_firstname=cr_firstname
+            s.cr_lastname=cr_lastname
+            s.cr_gender=cr_gender
+            s.cr_crime=cr_crime
+            s.cr_weapon=cr_weapon
+            s.cr_date=cr_date
+            
+            print("i am here")
+            
+            s.save()
+            
+            return render(request,'main.html')
+
+        ''' if request.GET['a'] =='CSV':                     #CSV FILES
             
             print("i am here")
             
@@ -88,23 +107,6 @@ def add_criminal(request):
            #return render (request,'main.html')
         
         ''' 
-        if request.GET['a'] =='DB':                                           #DATABASE
-
-            s= Member()           #function in models.py
-        
-            #to store details
-            s.cr_firstname=cr_firstname
-            s.cr_lastname=cr_lastname
-            s.cr_gender=cr_gender
-            s.cr_crime=cr_crime
-            s.cr_weapon=cr_weapon
-            s.cr_date=cr_date
-            
-            print("i am here")
-            
-            s.save()
-            
-            return render(request,'main.html')
         
 #-----------------------------------------------------------------------------------------------
         
