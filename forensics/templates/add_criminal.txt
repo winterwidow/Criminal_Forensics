@@ -8,12 +8,12 @@
 
 <h1> Add a new criminal</h1>
 
-<form action='#' method="post">
+<form action='#' method="post" enctype="multipart/form-data">
 {%csrf_token%}
 
-<p> FirstName:  <input type="text" name="crfirstname"></p>
+<p> First Name:  <input type="text" name="crfirstname"></p>
 
-<p><small<h3> LastName: </h3> <input type="text" name="crlastname"></p></small>
+<p><small<h3> Last Name: </h3> <input type="text" name="crlastname"></p></small>
 
 <label for= "crgender"> Choose gender: </label>
 
@@ -49,6 +49,8 @@
 
 <p>
 
+<p> Image: </h8> <input type="file" name="crimage" accept="image/*" ></p>
+
 <!--<input type="Submit" formaction="add?a=CSV" value="Add to CSV" />-->
 
 <input type="Submit" formaction="add?a=DB" value="Add to DB" />
@@ -57,3 +59,4 @@
 </form>
 </center></body>
 </html>
+
