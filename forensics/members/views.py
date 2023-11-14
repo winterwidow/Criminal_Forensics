@@ -65,8 +65,9 @@ def add_criminal(request):
         cr_crime=request.POST['crime']
         cr_weapon=request.POST['weapon']
         cr_date=request.POST['date']
-
-       
+        file = request.FILES.get('crimage') # For FR
+        
+      
         if request.GET['a'] =='DB':                                           #DATABASE
 
             s= Member()           #function in models.py
@@ -78,35 +79,25 @@ def add_criminal(request):
             s.cr_crime=cr_crime
             s.cr_weapon=cr_weapon
             s.cr_date=cr_date
+
+            # For FR Start
+        
+            if file:                
+                # Save the file in media/known_criminals directory
+                known_faces_dir = settings.MEDIA_ROOT/'known_criminals/' 
+                file_path = os.path.join(known_faces_dir, file.name)
+                
+                with open(file_path, 'wb') as destination:
+                    for chunk in file.chunks():
+                        destination.write(chunk)
+
+                # Save the file path in the cr_image field
+                s.cr_image='known_criminals/'+file.name              
             
-            print("i am here")
-            
+            # For FR end
             s.save()
             
             return render(request,'main.html')
-
-        ''' if request.GET['a'] =='CSV':                     #CSV FILES
-            
-            print("i am here")
-            
-            with open('CriminalDetails.csv','a',newline='') as csvfile:
-                
-                print("i am here 1")
-                
-                wcs=csv.writer(csvfile)
-
-                #wcs.writerow(['FirstName','LastName','Gender','Crime','Weapon','Date'])
-                #wcs.writerow([cr_firstname,cr_lastname,cr_dna])
-                wcs.writerow([cr_firstname,cr_lastname,cr_gender,cr_crime,cr_weapon,cr_date])
-                
-            print("i am here 2")
-            
-            return render(request,'main.html')
-            
-        #else:
-           #return render (request,'main.html')
-        
-        ''' 
         
 #-----------------------------------------------------------------------------------------------
         
