@@ -15,13 +15,36 @@
 
 <p><small<h3> LastName: </h3> <input type="text" name="crlastname"></p></small>
 
-<p><small<h4> Gender: </h4> <input type="text" name="crgender"></p></small>
+<label for= "crgender"> Choose gender: </label>
+
+   <select name='crgender' id='gender'>
+
+     <option value='M'>Male</option>
+     <option value='F'>Female</option>
+     <option value='N'>Neither</option>
+
+   </select>
 
 <p><small<h5> Crime: </h5> <input type="text" name="crime"></p></small>
 
 <p><small<h6> Weapon: </h6> <input type="text" name="weapon"></p></small>
 
-<p><small<h7> Date: </h7> <input type="date" name="date" placeholder="YYYY-MM-DD"></p></small>
+<label for="date">Date:</label>
+<input type="date" id="datePicker" name="date" max="" oninput="setMaxDate()">
+
+<script>
+
+    function setMaxDate() {
+
+      // Get the current date
+      var currentDate = new Date().toISOString().split('T')[0];
+
+      // Set the max attribute of the date input to the current date
+      document.getElementById("datePicker").max = currentDate;
+
+    }
+
+  </script
 
 
 <p>
