@@ -4,7 +4,7 @@
 <title> HOME</title>
 </head>
 
-<body> <class= "container"> <center>
+<body class= "container"> <center>
 
 <h1> List of Criminals </h1>
 
@@ -34,7 +34,7 @@
 <td>{{ s.cr_gender }}</td>
 <td>{{ s.cr_crime }}</td>
 <td>{{ s.cr_weapon }}</td>
-<td><img src="../../media/{{s.cr_image}}" alt="Image" height = "80" width = "80" ></td>
+<td><img src="../../media/{{s.cr_image}}" alt="Image not available" height = "80" width = "80" ></td>
 
 </tr>
 
