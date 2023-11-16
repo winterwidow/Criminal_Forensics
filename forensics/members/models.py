@@ -13,3 +13,6 @@ class Member(models.Model):
     cr_image = models.ImageField(upload_to='known_criminals/', blank=True,null=True,)
     #cr_fprint = models.BinaryField(upload_to='user_files/',blank=True,null=True)
     cr_fprint = models.BinaryField(blank=True,null=True,db_index=True)
+
+    def get_absolute_url(self):
+        return self.image.url
