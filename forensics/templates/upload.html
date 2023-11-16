@@ -1,0 +1,29 @@
+<!-- templates/upload.html -->
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Upload Fingerprint</title>
+
+</head>
+<body>
+
+    <h2>Upload Fingerprint File</h2>
+
+    {% if error_message %}
+
+    <p style="color: red;">{{ error_message }}</p>
+
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <input type="file" name="file" accept=".bmp, .jpg, .png">
+        <button type="submit">Upload</button>
+
+    </form>
+    <p><a href="/members">Home</a></p>
+</body>
+</html>

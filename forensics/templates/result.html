@@ -1,0 +1,29 @@
+<!-- templates/result.html -->
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Fingerprint Matching Results</title>
+
+</head>
+
+<body>
+
+    <h2>Matching Results</h2>
+
+    {% if matches %}
+    <ul>
+        {% for match in matches %}
+            <li>
+                <strong>Matched Image:</strong> <img src="{{ match.matched_image.url }}" alt="Matched Image"><br>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No matches found.</p>
+{% endif %}
+
+
+    <p><a href="/members">Home</a></p>
+</body>
+</html>
