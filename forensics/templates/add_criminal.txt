@@ -51,6 +51,8 @@
 
 <p> Image: </h8> <input type="file" name="crimage" accept="image/*" ></p>
 
+<p> Fingerprint: </h8> <input type="file" name="crfprint" accept="image/*" ></p>
+
 <!--<input type="Submit" formaction="add?a=CSV" value="Add to CSV" />-->
 
 <input type="Submit" formaction="add?a=DB" value="Add to DB" />
