@@ -66,6 +66,7 @@ def add_criminal(request):
         cr_weapon=request.POST['weapon']
         cr_date=request.POST['date']
         file = request.FILES.get('crimage') # For FR
+        fprint = request.FILES.get('crfprint')
         
       
         if request.GET['a'] =='DB':                                           #DATABASE
