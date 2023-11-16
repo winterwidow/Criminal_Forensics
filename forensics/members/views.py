@@ -257,14 +257,19 @@ def find_matches(request):
         uploaded_file = request.FILES.get('file')
 
         if uploaded_file:
+
             try:
                 print("inside try of uploaded image")
+
                 # Convert BytesIO object to a Pillow Image object
                 uploaded_img = Image.open(uploaded_file)
-                print("got image")
-                # Specify the directory path where fingerprint files are stored
 
+                print("got image")
+
+                # Specify the directory path where fingerprint files are stored
                 fingerprint_directory = r'C:\Users\naija\AppData\Local\Programs\Python\Python310\Scripts\Criminal_Forensics\forensics\fingerprints\SOCOFing\Real'
+
+                matched_fingerprint= ''
 
                 # Iterate through all files in the directory
                 for filename in os.listdir(fingerprint_directory):
@@ -284,16 +289,16 @@ def find_matches(request):
                       
                         # set a threshold for similarity and consider it a match if similarity > threshold
                         if calculate_similarity(uploaded_img, stored_img)>=0.8:
-                            matches.append({
-                                #'uploaded_image': uploaded_file,
-                                'matched_image': filepath,
-                                })
 
+                            matches.append({'matched_image': filepath,})
+
+                            matched_fingerprint = filepath
                             print("SUCCESS!")
                             print(filepath)
                             break
 
             except Exception as e:
+
                 # Handle exceptions, such as file reading errors
                 print(f"Error finding matches: {e}")
                 error_message = 'An unexpected error occurred while finding matches.'
@@ -301,7 +306,10 @@ def find_matches(request):
             error_message = 'No file uploaded'
 
     if matches:
-        matched_fingerprint = Member.objects.get(id=matches[0].id)
+        
         return render(request, 'result.html', {'matches': matches, 'matched_fingerprint': matched_fingerprint})
+
+        '''matched_fingerprint=filepath
+        return render(request, 'result.html', {'matched_fingerprint' : matched_fingerprint})'''
     else:
         return render(request, 'upload.html', {'error_message': error_message})
