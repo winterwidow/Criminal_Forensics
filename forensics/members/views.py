@@ -92,9 +92,22 @@ def add_criminal(request):
                         destination.write(chunk)
 
                 # Save the file path in the cr_image field
-                s.cr_image='known_criminals/'+file.name              
+                s.cr_image='known_criminals/'+file.name    
+
+            #print("i am here")
+
+            if fprint:                
+                # Save the file in media/known_criminals directory
+                known_faces_dir = settings.MEDIA_ROOT/'uploaded_images/' 
+                file_path = os.path.join(known_faces_dir, file.name)
+    
+                with open(file_path, 'wb') as destination:
+                    for i in file.chunks():
+                        destination.write(i)
+
+                # Save the file path in the cr_image field
+                s.cr_image='uploaded_images/'+file.name  
             
-            # For FR end
             s.save()
             
             return render(request,'main.html')
