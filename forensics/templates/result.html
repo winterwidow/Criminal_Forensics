@@ -1,4 +1,6 @@
 <!-- templates/result.html -->
+{% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,16 +14,24 @@
     <h2>Matching Results</h2>
 
     {% if matches %}
-    <ul>
-        {% for match in matches %}
-            <li>
-                <strong>Matched Image:</strong> <img src="{{ match.matched_image.url }}" alt="Matched Image"><br>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No matches found.</p>
-{% endif %}
+        <ul>
+            {% for match in matches %}
+                <li>
+                    <p>Matched Image Path: {{ match.matched_image }}</p>
+                    <img src="{% static 'images/' %}{{ match.matched_image|filename }}" alt="Matched Image">
+                </li>
+            {% endfor %}
+        </ul>
+        
+        {% if matched_fingerprint %}
+            <p>Details of the Specific Match:</p>
+            <p>Matched Fingerprint Image Path: {{ matched_fingerprint }}</p>
+            <img src="{% static 'images/' %}{{ matched_fingerprint|filename }}" alt="Matched Fingerprint Image">
+        {% endif %}
+
+    {% else %}
+        <p>No matches found.</p>
+    {% endif %}
 
 
     <p><a href="/members">Home</a></p>
