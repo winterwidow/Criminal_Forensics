@@ -220,74 +220,74 @@ def facial_recognition(request):
 
 # FINGERPRINT MATCHING
 
-'''def upload_file(request):
-    
+def calculate_similarity(img1, img2):
+    print("Inside similarity func")
+    # Convert images to grayscale if they are not already
+    img1_gray = img1.convert('L') if img1.mode != 'L' else img1
+    img2_gray = img2.convert('L') if img2.mode != 'L' else img2
+
+    # Convert images to NumPy arrays
+    array1 = np.array(img1_gray)
+    array2 = np.array(img2_gray)
+
+    # Calculate Structural Similarity Index
+    similarity_index, _ = ssim(array1, array2, full=True)
+
+    return similarity_index
+
+def find_matches(request):
+    error_message = None
+    matches = []
     if request.method == 'POST':
-        
-        fingerprint_data = request.POST.get('fingerprint_data')
-        file = request.FILES['file_upload']
-        
-        s = Member()
+        print("inside collecting file")   #works
+        uploaded_file = request.FILES.get('file')
 
-        s.cr_fprint=fingerprint_data
-        s.save()
+        if uploaded_file:
+            try:
+                print("inside try of uploaded image")
+                # Convert BytesIO object to a Pillow Image object
+                uploaded_img = Image.open(uploaded_file)
+                print("got image")
+                # Specify the directory path where fingerprint files are stored
 
-    return render(request,"fingerprint.html")
-    '''
+                fingerprint_directory = r'C:\Users\naija\AppData\Local\Programs\Python\Python310\Scripts\Criminal_Forensics\forensics\fingerprints\SOCOFing\Real'
 
-def is_fingerprint_image(image_data):
-    
-    fingerprint_image = cv2.imdecode(np.fromstring(image_data.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
-    
-    if fingerprint_image is None:
-        return False
-        
-    edges = cv2.Canny(fingerprint_image, 100, 200)
-    return np.sum(edges) > 100
+                # Iterate through all files in the directory
+                for filename in os.listdir(fingerprint_directory):
 
-def fingerprint_match(request):
-    
-    if request.method == 'POST':
-        uploaded_fingerprint_data = request.FILES.get('fingerprint_data')
+                    print("inside for")    
 
-        if not uploaded_fingerprint_data:
-            error_message = "Please upload a valid fingerprint data file."
-            return render(request, 'upload_form.html', {'error_message': error_message})
+                    filepath = os.path.join(fingerprint_directory, filename)
+                    
+                    # Check if the file is an image
 
-        if not is_fingerprint_image(uploaded_fingerprint_data):
-            error_message = "The uploaded file is not a valid fingerprint image."
-            return render(request, 'upload_form.html', {'error_message': error_message})
+                    if os.path.isfile(filepath) and filename.lower().endswith(('.png', '.jpg', '.bmp')):
 
-        best_score = 0
-        best_filename = None
-        #sample = cv2.imread("SOCOFing/Altered/Altered-hard/150__M_Right_index_finger_Obl.BMP")
-        sample=uploaded_fingerprint_data
-        sift = cv2.SIFT_create()
-        l = [file for file in os.listdir("SOCOFing/Real")][:1000]
+                        print("inside if")
 
-        for file in l:
-            
-            fingerprint_image = cv2.imread(os.path.join("SOCOFing/Real", file))
-            keypoints1, descriptors1 = sift.detectAndCompute(sample, None)
-            keypoints2, descriptors2 = sift.detectAndCompute(fingerprint_image, None)
+                        # Convert stored fingerprint image to a Pillow Image object
+                        stored_img = Image.open(filepath)
+                      
+                        # set a threshold for similarity and consider it a match if similarity > threshold
+                        if calculate_similarity(uploaded_img, stored_img)>=0.8:
+                            matches.append({
+                                #'uploaded_image': uploaded_file,
+                                'matched_image': filepath,
+                                })
 
-            matches = cv2.FlannBasedMatcher({'algorithm': 1, 'trees': 10}, {}).knnMatch(descriptors1, descriptors2, k=2)
-            match_points = [p for p, q in matches if p.distance < 0.1 * q.distance]
+                            print("SUCCESS!")
+                            print(filepath)
+                            break
 
-            keypoints = min(len(keypoints1), len(keypoints2))
-            match_score = len(match_points) / keypoints * 100
+            except Exception as e:
+                # Handle exceptions, such as file reading errors
+                print(f"Error finding matches: {e}")
+                error_message = 'An unexpected error occurred while finding matches.'
+        else:
+            error_message = 'No file uploaded'
 
-            if match_score > best_score:
-                best_score = match_score
-                best_filename = file
-
-        result = {
-            'best_filename': best_filename,
-            'score': round(best_score, 3)
-        }
-
-        return JsonResponse(result)
-
-    return render(request, 'fingerprint_match.html')
-
-    
+    if matches:
+        matched_fingerprint = Member.objects.get(id=matches[0].id)
+        return render(request, 'result.html', {'matches': matches, 'matched_fingerprint': matched_fingerprint})
+    else:
+        return render(request, 'upload.html', {'error_message': error_message})
