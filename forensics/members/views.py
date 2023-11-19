@@ -99,17 +99,17 @@ def add_criminal(request):
 
             #print("i am here")
 
-            if fprint:                
-                # Save the file in media/known_criminals directory
-                known_faces_dir = settings.MEDIA_ROOT/'uploaded_images/' 
-                file_path = os.path.join(known_faces_dir, file.name)
+           if fprint:                
+                # Save the file in media/uploaded_images directory
+                known_fprint_dir = settings.MEDIA_ROOT/'uploaded_images/' 
+                fprint_path = os.path.join(known_fprint_dir, fprint.name)
     
-                with open(file_path, 'wb') as destination:
-                    for i in file.chunks():
+                with open(fprint_path, 'wb') as destination:
+                    for i in fprint.chunks():
                         destination.write(i)
 
-                # Save the file path in the cr_image field
-                s.cr_image='uploaded_images/'+file.name  
+                # Save the file path in the cr_fprint field
+                s.cr_fprint='uploaded_images/'+fprint.name  
             
             s.save()
             
