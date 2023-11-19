@@ -12,6 +12,8 @@ import cv2
 import os
 import numpy as np
 from .models import Member     #member is a database to store all members' info
+from PIL import Image
+from skimage.metrics import structural_similarity as ssim
 
 #templates are text docs to connect html and django.
 #written in html
