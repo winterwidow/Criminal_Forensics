@@ -303,7 +303,7 @@ def find_matches(request):
 
                 # Handle exceptions, such as file reading errors
                 print(f"Error finding matches: {e}")
-                error_message = 'An unexpected error occurred while finding matches.'
+                error_message = 'No match found.'
         else:
             error_message = 'No file uploaded'
 
