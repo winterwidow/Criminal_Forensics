@@ -8,16 +8,16 @@
 
 <h1> Add a new criminal</h1>
 
-<form action='#' method="post" enctype="multipart/form-data">
+<form action='#' method="post">
 {%csrf_token%}
 
-<p> First Name:  <input type="text" name="crfirstname"></p>
+<p> FirstName:  <input type="text" name="crfirstname" required></p>
 
-<p><small<h3> Last Name: </h3> <input type="text" name="crlastname"></p></small>
+<p><small<h3> LastName: </h3> <input type="text" name="crlastname" required></p></small>
 
 <label for= "crgender"> Choose gender: </label>
 
-   <select name='crgender' id='gender'>
+   <select name='crgender' id='gender' required>
 
      <option value='M'>Male</option>
      <option value='F'>Female</option>
@@ -25,12 +25,16 @@
 
    </select>
 
-<p><small<h5> Crime: </h5> <input type="text" name="crime"></p></small>
 
-<p><small<h6> Weapon: </h6> <input type="text" name="weapon"></p></small>
+<p><small<h5> Crime: </h5> <input type="text" name="crime" required></p></small>
+
+<p><small<h6> Weapon: </h6> <input type="text" name="weapon" required></p></small>
+
+<!-- <p><small<h7> Date: </h7> <input type="date" name="date" placeholder="YYYY-MM-DD"></p></small> -->
+
 
 <label for="date">Date:</label>
-<input type="date" id="datePicker" name="date" max="" oninput="setMaxDate()">
+<input type="date" id="datePicker" name="date" max="" oninput="setMaxDate()" required>
 
 <script>
 
@@ -46,12 +50,11 @@
 
   </script
 
+<p> Image: </h8> <input type="file" name="crfprint" accept="image/*" required></p>
+
+<p> Fingerprint: </h8> <input type="file" name="crfprint" accept="image/*" required></p>
 
 <p>
-
-<p> Image: </h8> <input type="file" name="crimage" accept="image/*" ></p>
-
-<p> Fingerprint: </h8> <input type="file" name="crfprint" accept="image/*" ></p>
 
 <!--<input type="Submit" formaction="add?a=CSV" value="Add to CSV" />-->
 
@@ -61,4 +64,6 @@
 </form>
 </center></body>
 </html>
+
+
 
