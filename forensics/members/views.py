@@ -99,7 +99,7 @@ def add_criminal(request):
 
             #print("i am here")
 
-           if fprint:                
+            if fprint:                
                 # Save the file in media/uploaded_images directory
                 known_fprint_dir = settings.MEDIA_ROOT/'uploaded_images/' 
                 fprint_path = os.path.join(known_fprint_dir, fprint.name)
